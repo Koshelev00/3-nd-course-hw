@@ -1,0 +1,70 @@
+/* .body {
+  background-color: aquamarine;
+} */
+/* .like-button {
+  background-color: white; /* Исходный цвет фона */
+  /* border: none; Убираем рамку */
+  /* } */ 
+  /* #commentContainer {
+    background-color: aquamarine;
+  }
+
+  /* .liked {
+    color: white;
+    background-color: darkred;
+  } */
+   .commentContainer{
+    display: flex;
+    flex-direction: column;
+   }
+  .like-button {
+    border: none;
+    width: 30px;
+    height: 30px;
+    background-color: white;
+    cursor: pointer;
+    margin-left: 20px;
+    margin-top: 50px;
+   
+    } 
+    #like:hover path {
+     fill:#d31212;
+    }
+    .number-like {
+      border: none;
+      height: 20px;
+      width: 26px;
+      font-size: 20px;
+      outline:none;
+      
+    }
+   
+    .number-like::-webkit-outer-spin-button,
+    .number-like::-webkit-inner-spin-button {
+    display: none; 
+    -webkit-appearance: none;
+    margin: 0;
+    }
+    .delete-button {
+      border: none;
+      width: 25px;
+      height: 25px;
+      background-color: white;
+      cursor: pointer;
+      background-image: url('delete.png');
+    }
+    .comment {
+      display: flex;
+      flex-direction: column;
+    }
+    .comment-textarea {
+      margin-top: 100px;
+      min-height: 50px;
+      width: 400px;
+    }
+    .add-comment {
+      margin-top: 20px;
+      margin-bottom: 20px;
+      height: 35px;
+      width: 160px;
+    }
