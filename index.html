@@ -90,6 +90,7 @@
   let likeButtonsElements = document.querySelectorAll("#Button")
   for (const likeButtonElements of likeButtonsElements) {
     likeButtonElements.addEventListener("click", (event) => {
+      event.stopPropagation();
       const index = event.target.dataset.index;
       let comment = comments[index];
      
@@ -138,12 +139,35 @@ document.getElementById("add-form-button").addEventListener("click", function ()
     
   }
 });
+const answerClickListeners = () => {
+let answerComments = document.querySelectorAll(".comment");
+for (const answerComment of answerComments) {
+answerComment.addEventListener("click", (event) =>  {
+// const index = answerComment.dataset.index;
+// // const index = event.target.dataset.index;
+//   let comment = comments[index];
+
+
+console.log(event);
+document.getElementById("comment-textarea").value = comments.map((comment, index) => {
   
+  return ` 
+  > ${comment.name} ${comment.text}
+  `
+// answerTextArea.value= event;
+// console.log(answerTextArea);
+renderComment(comments);
+}).join("");
+const index = event.target.dataset.index;
+let comment = comments[index];
+})
+} 
+} 
 function renderComment(comments) {
   const ul = document.getElementById("comments");
   ul.innerHTML = comments.map((comment, index) => {
   let classButton = comment.liked ? "active-like" : "like-button";
-  console.log(comment.liked);
+  
   
    
     return `
@@ -168,6 +192,7 @@ function renderComment(comments) {
   
 `}).join("");
   initAddClickListeners();
+  answerClickListeners();
 }
 renderComment(comments);
 console.log("It works!");
