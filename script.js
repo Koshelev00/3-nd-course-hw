@@ -84,7 +84,8 @@ for (const answerComment of answerComments) {
   answerComment.addEventListener("click", (event) => {
     const index = event.currentTarget.dataset.index; 
     const comment = comments[index];
-    document.getElementById("comment-textarea").value = `> ${comment.name} ${comment.text}`; 
+    document.getElementById("comment-textarea").value = `> ${comment.name} ${comment.text} < \n`; 
+    document.getElementById("comment-textarea").focus();
 
 renderComment(comments);
 });
