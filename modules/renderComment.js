@@ -1,5 +1,4 @@
 import { initAddClickListeners, answerClickListeners } from './listener.js'
-
 export const renderComment = (comments) => {
     const ul = document.getElementById('comments')
     ul.innerHTML = comments
@@ -8,8 +7,8 @@ export const renderComment = (comments) => {
             return `    
      <li class="comment"  data-index="${index}">
           <div class="comment-header">
-            <div>${comment.name}</div>
-            <div>${comment.dates}</div>
+            <div>${comment.author.name}</div>
+            <div>${comment.date})}</div>
           </div>
           <div class="comment-body">
             <div class="comment-text">
