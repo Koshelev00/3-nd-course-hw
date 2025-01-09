@@ -58,7 +58,7 @@ export const addComment = () => {
             .then((data) => {
                 updateComments(data.comments)
                 console.log(data)
-                renderComment(data.comments)
+                renderComment(comments)
             })
     } else {
         alert('Все поля должны быть заполнены')
