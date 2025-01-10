@@ -1,11 +1,10 @@
 import { initAddClickListeners, answerClickListeners } from './listener.js'
 export const renderComment = (comments) => {
     const ul = document.getElementById('comments')
-    if (Array.isArray(comments)) {
-        ul.innerHTML = comments
-            .map((comment, index) => {
-                let classButton = comment.liked ? 'active-like' : 'like-button'
-                return `    
+    ul.innerHTML = comments
+        .map((comment, index) => {
+            let classButton = comment.liked ? 'active-like' : 'like-button'
+            return `    
      <li class="comment"  data-index="${index}">
           <div class="comment-header">
             <div>${comment.author.name}</div>
@@ -24,10 +23,8 @@ export const renderComment = (comments) => {
           </div>
         </li>  
 `
-            })
-
-            .join('')
-    }
+        })
+        .join('')
     initAddClickListeners()
     answerClickListeners()
 }

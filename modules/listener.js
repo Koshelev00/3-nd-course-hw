@@ -48,19 +48,34 @@ export const addComment = () => {
         document.getElementById('comment-textarea').value = ''
         document.getElementById('name-input').value = ''
 
-        fetch('https://webdev-hw-api.vercel.app/api/v1/gleb-fokin/comments', {
+        fetch('https://webdev-hw-api.vercel.app/api/v1/alexey-koshelev/comments', {
             method: 'POST',
             body: JSON.stringify(newComment),
         })
             .then((response) => {
                 return response.json()
             })
+        
             .then((data) => {
                 updateComments(data.comments)
                 console.log(data)
-                renderComment(comments)
-            })
-    } else {
+                console.log(data.comments)
+                if  (data.result=== "ok") {
+                    fetch('https://webdev-hw-api.vercel.app/api/v1/alexey-koshelev/comments')
+                    .then((response) => {
+                        return response.json()
+                    })
+                    .then((data) => {
+                        updateComments(data.comments)
+                        renderComment(comments) 
+                    })
+                }else {
+                    alert('Ошибка при отправке комментария: Имя и комментарий должны содержать не менее 3 символов')
+                    console.log(data)
+                }
+                }) 
+}else {
         alert('Все поля должны быть заполнены')
     }
 }
+
