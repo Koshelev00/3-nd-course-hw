@@ -58,8 +58,6 @@ export const addComment = () => {
         
             .then((data) => {
                 updateComments(data.comments)
-                console.log(data)
-                console.log(data.comments)
                 if  (data.result=== "ok") {
                     fetch('https://webdev-hw-api.vercel.app/api/v1/alexey-koshelev/comments')
                     .then((response) => {
@@ -71,7 +69,6 @@ export const addComment = () => {
                     })
                 }else {
                     alert('Ошибка при отправке комментария: Имя и комментарий должны содержать не менее 3 символов')
-                    console.log(data)
                 }
                 }) 
 }else {
