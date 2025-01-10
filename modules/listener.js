@@ -2,7 +2,6 @@ import { comments, updateComments } from './comments.js'
 import { renderComment } from './renderComment.js'
 import { escapeHtml } from './escapeHtml.js'
 import { createCommentObject } from './createCommentObject.js'
-// import { updateComments } from './modules/comments.js'
 export const initAddClickListeners = () => {
     let likeButtonsElements = document.querySelectorAll('#Button')
     for (const likeButtonElements of likeButtonsElements) {
