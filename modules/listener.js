@@ -1,4 +1,4 @@
-import { comments } from './comments.js'
+import { comments, updateComments } from './comments.js'
 import { renderComment } from './renderComment.js'
 import { escapeHtml } from './escapeHtml.js'
 import { createCommentObject } from './createCommentObject.js'
@@ -30,7 +30,7 @@ export const answerClickListeners = () => {
             const index = event.currentTarget.dataset.index
             const comment = comments[index]
             document.getElementById('comment-textarea').value =
-                `> ${comment.name} ${comment.text} < \n`
+                `> ${comment.author.name} ${comment.text} < \n`
             document.getElementById('comment-textarea').focus()
 
             renderComment(comments)
@@ -39,18 +39,39 @@ export const answerClickListeners = () => {
 }
 
 export const addComment = () => {
-    let commentText = escapeHtml(
-        document.getElementById('comment-textarea').value,
-    )
-    let nameText = document.getElementById('name-input').value
+    let text = escapeHtml(document.getElementById('comment-textarea').value)
+    let name = document.getElementById('name-input').value
 
-    if (commentText && nameText) {
-        const newComment = createCommentObject(nameText, commentText)
+    if (text && name) {
+        const newComment = createCommentObject(name, text)
         document.getElementById('comment-textarea').value = ''
         document.getElementById('name-input').value = ''
-        comments.push(newComment)
-        renderComment(comments)
-    } else {
+
+        fetch('https://webdev-hw-api.vercel.app/api/v1/alexey-koshelev/comments', {
+            method: 'POST',
+            body: JSON.stringify(newComment),
+        })
+            .then((response) => {
+                return response.json()
+            })
+        
+            .then((data) => {
+                updateComments(data.comments)
+                if  (data.result=== "ok") {
+                    fetch('https://webdev-hw-api.vercel.app/api/v1/alexey-koshelev/comments')
+                    .then((response) => {
+                        return response.json()
+                    })
+                    .then((data) => {
+                        updateComments(data.comments)
+                        renderComment(comments) 
+                    })
+                }else {
+                    alert('Ошибка при отправке комментария: Имя и комментарий должны содержать не менее 3 символов')
+                }
+                }) 
+}else {
         alert('Все поля должны быть заполнены')
     }
 }
+

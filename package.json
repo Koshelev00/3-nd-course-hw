@@ -20,5 +20,13 @@
     "eslint-plugin-prettier": "^5.2.1",
     "globals": "^15.14.0",
     "prettier": "^3.4.2"
-  }
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Koshelev00/3-nd-course-hw.git"
+  },
+  "bugs": {
+    "url": "https://github.com/Koshelev00/3-nd-course-hw/issues"
+  },
+  "homepage": "https://github.com/Koshelev00/3-nd-course-hw#readme"
 }
