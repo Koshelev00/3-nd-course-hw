@@ -3,31 +3,24 @@ import { renderComment } from './renderComment.js'
 import { escapeHtml } from './escapeHtml.js'
 import { createCommentObject } from './createCommentObject.js'
 import { fetchAndRenderComment } from './fetchAndRenderComment.js'
+import { delay } from './delay.js'
 export const initAddClickListeners = () => {
     let likeButtonsElements = document.querySelectorAll('#Button')
+   
     for (const likeButtonElements of likeButtonsElements) {
         likeButtonElements.addEventListener('click', (event) => {
             event.stopPropagation()
+            likeButtonElements.className += ' loading-like'
             const index = event.target.dataset.index
             let comment = comments[index]
-            if (comment.liked) {
-                if (comment.likes > 0) {
-                    comment.likes--
-                    comment.liked = false
-                }
-            } else {
-                comment.likes++
-                comment.liked = true
-            }
-            // delay(2000).then(() => {
-            //     comment.likes = comment.isLiked
-            //        ? comment.likes - 1
-            //        : comment.likes + 1;
-            //     comment.isLiked = !comment.isLiked;
-            //     comment.isLikeLoading = false;
-            //     renderComments();
-            //  });
-            renderComment(comments)
+            delay(2000).then(() => {
+                comment.likes = comment.isLiked
+                    ? comment.likes - 1
+                    : comment.likes + 1
+                comment.isLiked = !comment.isLiked
+                comment.isLikeLoading = false
+                renderComment(comments)
+            })
         })
     }
 }
@@ -57,9 +50,9 @@ export const addComment = () => {
         const newComment = createCommentObject(name, text)
         document.getElementById('comment-textarea').value = ''
         document.getElementById('name-input').value = ''
-        document.querySelectorAll(".add-form")[0].style.display = "none";
-        document.querySelectorAll(".comments-discription")[0].style.display = "block";
-        
+        document.querySelectorAll('.add-form')[0].style.display = 'none'
+        document.querySelectorAll('.comments-discription')[0].style.display =
+            'block'
 
         fetch(
             'https://webdev-hw-api.vercel.app/api/v1/alexey-koshelev/comments',
@@ -71,10 +64,21 @@ export const addComment = () => {
             .then(() => {
                 return fetchAndRenderComment()
             })
+
             .then(() => {
-                document.querySelectorAll(".comments-discription")[0].style.display = "none";
-                document.querySelectorAll(".add-form")[0].style.display = "block";
+                document.querySelectorAll(
+                    '.comments-discription',
+                )[0].style.display = 'none'
+                document.querySelectorAll('.add-form')[0].style.display =
+                    'block'
             })
+        delay(2000).then(() => {
+            comments.likes = comments.isLiked
+                ? comments.likes - 1
+                : comments.likes + 1
+            comments.isLiked = !comments.isLiked
+            comments.isLikeLoading = false
+        })
     } else {
         alert('Все поля должны быть заполнены')
     }

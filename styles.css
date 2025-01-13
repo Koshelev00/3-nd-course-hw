@@ -89,6 +89,7 @@ body {
     background-repeat: no-repeat;
     width: 22px;
     height: 22px;
+    
   }
 
   .active-like {
@@ -151,3 +152,21 @@ body {
     margin-top: 130x;
     margin-bottom: 139px;
   }
+  @keyframes rotating {
+    from {
+       transform: rotate(0deg);
+    }
+    25% {
+       transform: rotate(30deg);;
+    }
+    75% {
+       transform: rotate(-30deg);;
+    }
+    to {
+       transform: rotate(0deg);
+    }
+ }
+ 
+ .loading-like {
+    animation: rotating 2s linear infinite;
+ }
