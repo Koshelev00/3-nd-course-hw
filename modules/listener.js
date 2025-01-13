@@ -19,6 +19,14 @@ export const initAddClickListeners = () => {
                 comment.likes++
                 comment.liked = true
             }
+            // delay(2000).then(() => {
+            //     comment.likes = comment.isLiked
+            //        ? comment.likes - 1
+            //        : comment.likes + 1;
+            //     comment.isLiked = !comment.isLiked;
+            //     comment.isLikeLoading = false;
+            //     renderComments();
+            //  });
             renderComment(comments)
         })
     }
@@ -41,8 +49,6 @@ export const answerClickListeners = () => {
 
 const addButton = document.getElementById('add-form-button')
 
-
-
 export const addComment = () => {
     let text = escapeHtml(document.getElementById('comment-textarea').value)
     let name = document.getElementById('name-input').value
@@ -51,20 +57,25 @@ export const addComment = () => {
         const newComment = createCommentObject(name, text)
         document.getElementById('comment-textarea').value = ''
         document.getElementById('name-input').value = ''
-        addButton.disabled=true
-        addButton.textContent = "Отправка..."
-        fetch('https://webdev-hw-api.vercel.app/api/v1/alexey-koshelev/comments', {
-            method: 'POST',
-            body: JSON.stringify(newComment),
-        })
+        document.querySelectorAll(".add-form")[0].style.display = "none";
+        document.querySelectorAll(".comments-discription")[0].style.display = "block";
+        
+
+        fetch(
+            'https://webdev-hw-api.vercel.app/api/v1/alexey-koshelev/comments',
+            {
+                method: 'POST',
+                body: JSON.stringify(newComment),
+            },
+        )
             .then(() => {
-                return  fetchAndRenderComment()
-            })              
+                return fetchAndRenderComment()
+            })
             .then(() => {
-                addButton.disabled=false
-                addButton.textContent = "Написать"
-            }) 
-}else {
+                document.querySelectorAll(".comments-discription")[0].style.display = "none";
+                document.querySelectorAll(".add-form")[0].style.display = "block";
+            })
+    } else {
         alert('Все поля должны быть заполнены')
     }
 }
