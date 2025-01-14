@@ -6,7 +6,7 @@ import { fetchAndRenderComment } from './fetchAndRenderComment.js'
 import { delay } from './delay.js'
 export const initAddClickListeners = () => {
     let likeButtonsElements = document.querySelectorAll('#Button')
-   
+
     for (const likeButtonElements of likeButtonsElements) {
         likeButtonElements.addEventListener('click', (event) => {
             event.stopPropagation()
@@ -48,37 +48,73 @@ export const addComment = () => {
 
     if (text && name) {
         const newComment = createCommentObject(name, text)
-        document.getElementById('comment-textarea').value = ''
+
         document.getElementById('name-input').value = ''
         document.querySelectorAll('.add-form')[0].style.display = 'none'
         document.querySelectorAll('.comments-discription')[0].style.display =
             'block'
 
         fetch(
-            'https://webdev-hw-api.vercel.app/api/v1/alexey-koshelev/comments',
+            'https://webdev-hw-api.vercel.app/api/v1/alexey-koshelev/comments/error',
             {
                 method: 'POST',
                 body: JSON.stringify(newComment),
             },
         )
+            .then((response) => {
+                if (response.status === 201) {
+                    return response.json()
+                } else {
+                    if (response.status === 404) {
+                        throw new Error('API не доступен')
+                    }
+                    if (response.status === 500) {
+                        throw new Error('Сервер сломался, попробуй позже')
+                    }
+                    if (response.status === 400) {
+                        throw new Error(
+                            'Имя и комментарий должны быть не короче 3 символов',
+                        )
+                        
+                        // Failed to fetch
+                    } else {
+                        throw new Error(
+                            'Возникла какая-то ошибка',
+                        )
+                    }
+                }
+            })
+
             .then(() => {
                 return fetchAndRenderComment()
             })
 
-            .then(() => {
+            .then(() => {})
+
+            // delay(2000).then(() => {
+            //     comments.likes = comments.isLiked
+            //         ? comments.likes - 1
+            //         : comments.likes + 1
+            //     comments.isLiked = !comments.isLiked
+            //     comments.isLikeLoading = false
+            // })
+            .catch((error) => {
+                    
+                if (error.message === 'Failed to fetch') {
+                    alert('Ошибка подключения к интернету!');
+                  } else {
+                    alert(error.message);
+                  }
+            })
+            .finally(() => {
+                document.querySelectorAll('.add-form')[0].style.display =
+                    'block'
                 document.querySelectorAll(
                     '.comments-discription',
                 )[0].style.display = 'none'
-                document.querySelectorAll('.add-form')[0].style.display =
-                    'block'
+
+                document.getElementById('comment-textarea').value = ''
             })
-        delay(2000).then(() => {
-            comments.likes = comments.isLiked
-                ? comments.likes - 1
-                : comments.likes + 1
-            comments.isLiked = !comments.isLiked
-            comments.isLikeLoading = false
-        })
     } else {
         alert('Все поля должны быть заполнены')
     }
