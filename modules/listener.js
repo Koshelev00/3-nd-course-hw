@@ -42,6 +42,7 @@ export const answerClickListeners = () => {
 
 const addButton = document.getElementById('add-form-button')
 
+let error500Flag = false
 export const addComment = () => {
     let text = escapeHtml(document.getElementById('comment-textarea').value)
     let name = document.getElementById('name-input').value
@@ -49,75 +50,90 @@ export const addComment = () => {
     if (text && name) {
         const newComment = createCommentObject(name, text)
 
-        document.getElementById('name-input').value = ''
         document.querySelectorAll('.add-form')[0].style.display = 'none'
         document.querySelectorAll('.comments-discription')[0].style.display =
             'block'
 
         fetch(
-            'https://webdev-hw-api.vercel.app/api/v1/alexey-koshelev/comments/error',
+            'https://webdev-hw-api.vercel.app/api/v1/alexey-koshelev/comments',
             {
                 method: 'POST',
-                body: JSON.stringify(newComment),
+                body: JSON.stringify({
+                    name: newComment.name,
+                    text: newComment.text,
+                    forceError: true,
+                }),
             },
         )
             .then((response) => {
                 if (response.status === 201) {
+                    document.getElementById('comment-textarea').value = ''
+                    document.getElementById('name-input').value = ''
+                    error500Flag = false
+                    document.querySelectorAll(
+                        '.comments-discription',
+                    )[0].style.display = 'none'
+                    document.querySelectorAll('.add-form')[0].style.display =
+                        'block'
+
                     return response.json()
                 } else {
+                    if (response.status === 400) {
+                        throw new Error(
+                            'Имя и комментарий должны быть не короче 3 символов',
+                        )
+                    }
                     if (response.status === 404) {
                         throw new Error('API не доступен')
                     }
                     if (response.status === 500) {
                         throw new Error('Сервер сломался, попробуй позже')
                     }
-                    if (response.status === 400) {
-                        throw new Error(
-                            'Имя и комментарий должны быть не короче 3 символов',
-                        )
-                        
-                        // Failed to fetch
-                    } else {
-                        throw new Error(
-                            'Возникла какая-то ошибка',
-                        )
-                    }
+                    console.log(response.status)
+                    throw new Error('Ошибка при отправке комментария')
                 }
             })
-
             .then(() => {
                 return fetchAndRenderComment()
             })
 
-            .then(() => {})
-
-            // delay(2000).then(() => {
-            //     comments.likes = comments.isLiked
-            //         ? comments.likes - 1
-            //         : comments.likes + 1
-            //     comments.isLiked = !comments.isLiked
-            //     comments.isLikeLoading = false
-            // })
             .catch((error) => {
-                    
-                if (error.message === 'Failed to fetch') {
-                    alert('Ошибка подключения к интернету!');
-                  } else {
-                    alert(error.message);
-                  }
-            })
-            .finally(() => {
-                document.querySelectorAll('.add-form')[0].style.display =
-                    'block'
+                if (
+                    error.message === 'Сервер сломался, попробуй позже' &&
+                    error500Flag === true
+                ) {
+                    return addComment()
+                }
+                if (
+                    error500Flag === false &&
+                    error.message === 'Сервер сломался, попробуй позже'
+                ) {
+                    alert(error.message)
+                    console.error(error.message)
+                    error500Flag = true
+                    return addComment()
+                } else if (error instanceof TypeError) {
+                    alert('Кажется, у вас сломался интернет, попробуйте позже')
+                } else {
+                    alert(error.message)
+                }
+
                 document.querySelectorAll(
                     '.comments-discription',
                 )[0].style.display = 'none'
-
-                document.getElementById('comment-textarea').value = ''
+                document.querySelectorAll('.add-form')[0].style.display =
+                    'block'
             })
+
+        delay(2000).then(() => {
+            comments.likes = comments.isLiked
+                ? comments.likes - 1
+                : comments.likes + 1
+            comments.isLiked = !comments.isLiked
+            comments.isLikeLoading = false
+        })
     } else {
         alert('Все поля должны быть заполнены')
     }
 }
-
 addButton.addEventListener('click', addComment)
