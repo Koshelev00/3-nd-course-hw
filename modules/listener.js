@@ -45,7 +45,7 @@ const addButton = document.getElementById('add-form-button')
 let error500Flag = false
 export const addComment = () => {
     let text = escapeHtml(document.getElementById('comment-textarea').value)
-    let name = document.getElementById('name-input').value
+    let name = escapeHtml(document.getElementById('name-input').value)
 
     if (text && name) {
         const newComment = createCommentObject(name, text)
