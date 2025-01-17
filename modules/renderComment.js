@@ -6,7 +6,7 @@ export const renderComment = (comments) => {
     ul.innerHTML = comments
 
         .map((comment, index) => {
-            let classButton = comment.liked ? 'active-like' : 'like-button'
+            let classButton = comment.isLiked ? 'active-like' : 'like-button'
             const dateString = comment.date
             let dateObj = new Date(dateString)
             let momentObj = moment(dateObj)
