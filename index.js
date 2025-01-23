@@ -1,4 +1,4 @@
-import {comments, updateComments } from './modules/comments.js'
+import { comments, updateComments } from './modules/comments.js'
 import { initionFetchAndRenderComment } from './modules/initionFetchAndRenderComment.js'
 import { renderComment } from './modules/renderComment.js'
 // import { addComment } from './modules/listener.js'

@@ -9,7 +9,9 @@ export let initionFetchAndRenderComment = () => {
             return response.json()
         })
         .then((data) => {
-            document.querySelectorAll(".preloader__description")[0].style.display = "none";
+            document.querySelectorAll(
+                '.preloader__description',
+            )[0].style.display = 'none'
             updateComments(data.comments)
             renderComment(comments)
         })

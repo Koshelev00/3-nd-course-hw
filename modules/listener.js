@@ -61,7 +61,7 @@ export const addComment = () => {
                 body: JSON.stringify({
                     name: newComment.name,
                     text: newComment.text,
-                    forceError: true,
+                    forceError: false,
                 }),
             },
         )
