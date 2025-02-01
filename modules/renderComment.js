@@ -1,9 +1,10 @@
 import { initAddClickListeners, answerClickListeners } from './listener.js'
 import moment from '../node_modules/moment/dist/moment.js'
+import { comments } from './comments.js'
 
-export const renderComment = (comments) => {
-    const ul = document.getElementById('comments')
-    ul.innerHTML = comments
+export const renderComment = () => {
+    const container = document.getElementById('container')
+    const commentsHtml = comments
 
         .map((comment, index) => {
             let classButton = comment.isLiked ? 'active-like' : 'like-button'
@@ -32,6 +33,34 @@ export const renderComment = (comments) => {
 `
         })
         .join('')
+
+    const addCommentsHtml = `
+            <p class="comments-discription">Комментарий добавляется...</p>
+            <div class="add-form">
+                <input
+                    type="text"
+                    class="add-form-name"
+                    placeholder="Введите ваше имя"
+                    id="name-input"
+                />
+                <textarea
+                    type="textarea"
+                    class="add-form-text"
+                    placeholder="Введите ваш коментарий"
+                    rows="4"
+                    id="comment-textarea"
+                ></textarea>
+                <div class="add-form-row">
+                    <button class="add-form-button" id="add-form-button">
+                        Написать
+                    </button>
+                </div>
+            </div>`
+
+    const baseHtml = `<ul id="comments" class="comments">${commentsHtml}</ul>
+${addCommentsHtml}`
+    container.innerHTML = baseHtml
+
     initAddClickListeners()
     answerClickListeners()
 }

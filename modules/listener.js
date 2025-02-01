@@ -4,6 +4,8 @@ import { escapeHtml } from './escapeHtml.js'
 import { createCommentObject } from './createCommentObject.js'
 import { fetchAndRenderComment } from './fetchAndRenderComment.js'
 import { delay } from './delay.js'
+import { postComment } from './api.js'
+
 export const initAddClickListeners = () => {
     let likeButtonsElements = document.querySelectorAll('#Button')
 
@@ -54,45 +56,10 @@ export const addComment = () => {
         document.querySelectorAll('.comments-discription')[0].style.display =
             'block'
 
-        fetch(
-            'https://webdev-hw-api.vercel.app/api/v1/alexey-koshelev/comments',
-            {
-                method: 'POST',
-                body: JSON.stringify({
-                    name: newComment.name,
-                    text: newComment.text,
-                    forceError: true,
-                }),
-            },
-        )
-            .then((response) => {
-                if (response.status === 201) {
-                    document.getElementById('comment-textarea').value = ''
-                    document.getElementById('name-input').value = ''
-                    error500Flag = false
-                    document.querySelectorAll(
-                        '.comments-discription',
-                    )[0].style.display = 'none'
-                    document.querySelectorAll('.add-form')[0].style.display =
-                        'block'
-
-                    return response.json()
-                } else {
-                    if (response.status === 400) {
-                        throw new Error(
-                            'Имя и комментарий должны быть не короче 3 символов',
-                        )
-                    }
-                    if (response.status === 404) {
-                        throw new Error('API не доступен')
-                    }
-                    if (response.status === 500) {
-                        throw new Error('Сервер сломался, попробуй позже')
-                    }
-                    console.log(response.status)
-                    throw new Error('Ошибка при отправке комментария')
-                }
-            })
+    
+            postComment()
+        
+           
             .then(() => {
                 return fetchAndRenderComment()
             })
@@ -136,4 +103,6 @@ export const addComment = () => {
         alert('Все поля должны быть заполнены')
     }
 }
-addButton.addEventListener('click', addComment)
+document.addEventListener('DOMContentLoaded', () => {
+    addButton.addEventListener('click', addComment)
+})
