@@ -2,9 +2,14 @@ import { initAddClickListeners, answerClickListeners } from './listener.js'
 import moment from '../node_modules/moment/dist/moment.js'
 import { comments } from './comments.js'
 import { renderLogin } from './renderLogin.js'
-import { token} from './api.js'
+import { name, token } from './api.js'
 import { addComment } from './listener.js'
+// import { userToken } from './renderLogin.js'
 
+
+export let userToken = localStorage.getItem('token')
+    console.log(userToken)
+    console.log(localStorage.getItem('token'))
 export const renderComment = () => {
     const container = document.getElementById('container')
     const commentsHtml = comments
@@ -36,51 +41,64 @@ export const renderComment = () => {
 `
         })
         .join('')
-
+    let userName = localStorage.getItem('name')
+    
     const addCommentsHtml = `
             <p class="comments-discription">Комментарий добавляется...</p>
+            
             <div class="add-form">
+            
                 <input
                     type="text"
                     class="add-form-name"
                     placeholder="Введите ваше имя"
+                    readonly
+                    value="${userName}"
                     id="name-input"
                 />
                 <textarea
                     type="textarea"
                     class="add-form-text"
+
                     placeholder="Введите ваш коментарий"
                     rows="4"
                     id="comment-textarea"
                 ></textarea>
                 <div class="add-form-row">
+                <button class= "add-form-button logOut" id="logOut">Выйти</button>
                     <button class="add-form-button" id="add-form-button">
                         Написать
                     </button>
                 </div>
             </div>`
-    const linkToLoginText = `<p> Чиобы оправить комментарий, <span class="link-login">войдите</span></p>`
-   
+    const linkToLoginText = `<p> Чтобы оправить комментарий, <span class="link-login" id= "link-login">войдите</span></p>`
 
+    
     const baseHtml = `<ul id="comments" class="comments">${commentsHtml}</ul>
     
-${token ? addCommentsHtml : linkToLoginText}`
+    
+${userToken ? addCommentsHtml : linkToLoginText}`
+
     container.innerHTML = baseHtml
-    if (token) {
+    const logOut = document.getElementById('logOut')
+    
+    if (userToken) {
         initAddClickListeners()
         answerClickListeners()
-        
-          const addButton = document.getElementById('add-form-button')
-          addButton.addEventListener('click', addComment)
-          
-        
 
-    } else {
-        document.querySelector('.link-login').addEventListener('click', () => {
-            renderLogin()
+        const addButton = document.getElementById('add-form-button')
+        addButton.addEventListener('click', addComment)
+
+        logOut.addEventListener('click', () => {
+            localStorage.clear()
+            renderComment()
         })
+    } else {
+        const linkToLogin = document.getElementById('link-login')
+        if (linkToLogin) {
+            linkToLogin.addEventListener('click', () => {
+                renderLogin()
+            })
+        }
     }
-  
 }
-
-

@@ -1,8 +1,6 @@
-import { comments, updateComments } from './comments.js'
+import { comments } from './comments.js'
 import { renderComment } from './renderComment.js'
 import { escapeHtml } from './escapeHtml.js'
-import { createCommentObject } from './createCommentObject.js'
-import { fetchAndRenderComment } from './fetchAndRenderComment.js'
 import { delay } from './delay.js'
 import { postComment } from './api.js'
 
@@ -42,16 +40,11 @@ export const answerClickListeners = () => {
     }
 }
 
-
-
-
 export const addComment = () => {
-   let text = escapeHtml(document.getElementById('comment-textarea').value)
-   let name = escapeHtml(document.getElementById('name-input').value)
+    let text = escapeHtml(document.getElementById('comment-textarea').value)
+    let name = escapeHtml(document.getElementById('name-input').value)
 
     if (text && name) {
-      
-
         document.querySelectorAll('.add-form')[0].style.display = 'none'
         document.querySelectorAll('.comments-discription')[0].style.display =
             'block'
@@ -68,5 +61,4 @@ export const addComment = () => {
     } else {
         alert('Все поля должны быть заполнены')
     }
-    
 }

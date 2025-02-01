@@ -1,5 +1,7 @@
 import { login, setToken, setName } from './api.js'
 import {fetchAndRenderComment} from './fetchAndRenderComment.js'
+import { renderComment } from './renderComment.js';
+import { renderRegistration } from './renderRegistration.js'
 export const renderLogin = () => {
     const container = document.getElementById('container');
 
@@ -14,7 +16,7 @@ export const renderLogin = () => {
         required
         ></>
         <input
-        type="text"
+        type="password"
         class="add-form-name"
         placeholder="Введите пароль"
         id="password"
@@ -30,21 +32,40 @@ export const renderLogin = () => {
           </section>
    `
    container.innerHTML = loginHtml
+   document.querySelector('.registry').addEventListener('click', () => {
+    renderRegistration()
+   })
 
    const loginEl = document.querySelector('#login')
    const passwordEl = document.querySelector('#password')
    const submitButtonEl = document.querySelector('.button-main')
- 
+           
+        
+   
+  
    
    submitButtonEl.addEventListener('click', () => {
-       login(loginEl.value, passwordEl.value)
-            .then((response) => {
-                return response.json()
-       })
-       .then((data) => {
-         setToken(data.user.token)
-         setName(data.user.name)
-         fetchAndRenderComment()
-       })
-   })
+    submitButtonEl.disabled = true; 
+    login(loginEl.value, passwordEl.value)
+        .then((response) => {
+            if (!response.ok) {
+                throw new Error('Неверный логин или пароль'); 
+            }
+            return response.json();
+        })
+        .then((data) => {
+            setToken(data.user.token);
+            setName(data.user.name);
+            localStorage.setItem('token', data.user.token);
+            localStorage.setItem('name', data.user.name);
+            
+            fetchAndRenderComment();
+        })
+        .catch((error) => {
+            alert(error.message);
+        })
+        .finally(() => {
+          submitButtonEl.disabled = false;
+      });
+})
 }
