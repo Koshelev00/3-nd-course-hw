@@ -2,7 +2,7 @@
 
 
 export let fetchAndRenderLike = () => {
-    return fetch('https://webdev-hw-api.vercel.app/api/v1/alexey-koshelev/comments')
+    return fetch('https://wedev-api.sky.pro/api/v2/alexey-koshelev/comments')
         .then((response) => {
             return response.json()
         })

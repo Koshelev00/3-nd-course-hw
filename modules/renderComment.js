@@ -1,6 +1,9 @@
 import { initAddClickListeners, answerClickListeners } from './listener.js'
 import moment from '../node_modules/moment/dist/moment.js'
 import { comments } from './comments.js'
+import { renderLogin } from './renderLogin.js'
+import { token} from './api.js'
+import { addComment } from './listener.js'
 
 export const renderComment = () => {
     const container = document.getElementById('container')
@@ -56,11 +59,28 @@ export const renderComment = () => {
                     </button>
                 </div>
             </div>`
+    const linkToLoginText = `<p> Чиобы оправить комментарий, <span class="link-login">войдите</span></p>`
+   
 
     const baseHtml = `<ul id="comments" class="comments">${commentsHtml}</ul>
-${addCommentsHtml}`
+    
+${token ? addCommentsHtml : linkToLoginText}`
     container.innerHTML = baseHtml
+    if (token) {
+        initAddClickListeners()
+        answerClickListeners()
+        
+          const addButton = document.getElementById('add-form-button')
+          addButton.addEventListener('click', addComment)
+          
+        
 
-    initAddClickListeners()
-    answerClickListeners()
+    } else {
+        document.querySelector('.link-login').addEventListener('click', () => {
+            renderLogin()
+        })
+    }
+  
 }
+
+

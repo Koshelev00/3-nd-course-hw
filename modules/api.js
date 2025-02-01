@@ -1,8 +1,15 @@
+import { createCommentObject } from './createCommentObject.js'
+import { escapeHtml } from './escapeHtml.js'
+import { fetchAndRenderComment } from './fetchAndRenderComment.js'
 const host = ' https://wedev-api.sky.pro/api/v2/:alexey-koshelev'
 const authHost = 'https://wedev-api.sky.pro/api/user'
-let token = ''
+export let token = ''
 export const setToken = (newToken) => {
     token = newToken
+}
+export let name = ''
+export const setName = (newName) => {
+    name = newName
 }
 
 export const fetchComments = () => {
@@ -21,18 +28,27 @@ export const fetchComments = () => {
             return appComments
         })
 }
+let error500Flag = false
 
 export const postComment = (text, name) => {
-    return fetch(host + '/comments', {
-        method: 'POST',
-        headers: {
-            Authorization: `Bearer ${token}`,
-        },
-        body: JSON.stringify({
-            text,
-            name,
-        }),
-    })
+        text = escapeHtml(document.getElementById('comment-textarea').value)
+        name = escapeHtml(document.getElementById('name-input').value)
+    const newComment = createCommentObject(name, text)
+
+
+    return fetch( 'https://wedev-api.sky.pro/api/v2/alexey-koshelev/comments', {
+        
+            method: 'POST',
+            headers: {
+                Authorization: `Bearer ${token}`,
+            },
+            body: JSON.stringify({
+                name:newComment.name,
+                text:newComment.text,
+              
+            }),
+        })
+    
         .then((response) => {
             if (response.status === 201) {
                 document.getElementById('comment-textarea').value = ''
@@ -62,36 +78,53 @@ export const postComment = (text, name) => {
             }
         })
         .then(() => {
-            return fetchComments()
+            return fetchAndRenderComment()
+        })
+
+        .catch((error) => {
+            if (
+                error.message === 'Сервер сломался, попробуй позже' &&
+                error500Flag === true
+            ) {
+                return addComment()
+            }
+            if (
+                error500Flag === false &&
+                error.message === 'Сервер сломался, попробуй позже'
+            ) {
+                alert(error.message)
+                console.error(error.message)
+                error500Flag = true
+                return addComment()
+            } else if (error instanceof TypeError) {
+                alert('Кажется, у вас сломался интернет, попробуйте позже')
+            } else {
+                alert(error.message)
+            }
+
+            document.querySelectorAll(
+                '.comments-discription',
+            )[0].style.display = 'none'
+            document.querySelectorAll('.add-form')[0].style.display =
+                'block'
         })
 }
 
 export const login = (login, password) => {
     return fetch(authHost + '/login', {
         method: 'POST',
-      
+
         body: JSON.stringify({
             login,
             password,
         }),
     })
-       .then((response) => {
-            if (response.ok) {
-                return response.json()
-            } else {
-                throw new Error('Неправильный логин или пароль')
-            }
-        })
-       .then((data) => {
-            setToken(data.token)
-            return fetchComments()
-        })
 }
 
 export const registration = (name, login, password) => {
     return fetch(authHost, {
         method: 'POST',
-       
+
         body: JSON.stringify({
             name: name,
             login: login,

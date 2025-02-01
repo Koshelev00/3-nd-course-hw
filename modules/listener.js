@@ -42,55 +42,21 @@ export const answerClickListeners = () => {
     }
 }
 
-const addButton = document.getElementById('add-form-button')
 
-let error500Flag = false
+
+
 export const addComment = () => {
-    let text = escapeHtml(document.getElementById('comment-textarea').value)
-    let name = escapeHtml(document.getElementById('name-input').value)
+   let text = escapeHtml(document.getElementById('comment-textarea').value)
+   let name = escapeHtml(document.getElementById('name-input').value)
 
     if (text && name) {
-        const newComment = createCommentObject(name, text)
+      
 
         document.querySelectorAll('.add-form')[0].style.display = 'none'
         document.querySelectorAll('.comments-discription')[0].style.display =
             'block'
 
-    
-            postComment()
-        
-           
-            .then(() => {
-                return fetchAndRenderComment()
-            })
-
-            .catch((error) => {
-                if (
-                    error.message === 'Сервер сломался, попробуй позже' &&
-                    error500Flag === true
-                ) {
-                    return addComment()
-                }
-                if (
-                    error500Flag === false &&
-                    error.message === 'Сервер сломался, попробуй позже'
-                ) {
-                    alert(error.message)
-                    console.error(error.message)
-                    error500Flag = true
-                    return addComment()
-                } else if (error instanceof TypeError) {
-                    alert('Кажется, у вас сломался интернет, попробуйте позже')
-                } else {
-                    alert(error.message)
-                }
-
-                document.querySelectorAll(
-                    '.comments-discription',
-                )[0].style.display = 'none'
-                document.querySelectorAll('.add-form')[0].style.display =
-                    'block'
-            })
+        postComment()
 
         delay(2000).then(() => {
             comments.likes = comments.isLiked
@@ -102,7 +68,5 @@ export const addComment = () => {
     } else {
         alert('Все поля должны быть заполнены')
     }
+    
 }
-document.addEventListener('DOMContentLoaded', () => {
-    addButton.addEventListener('click', addComment)
-})
