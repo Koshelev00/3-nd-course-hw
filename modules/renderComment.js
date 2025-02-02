@@ -4,12 +4,10 @@ import { comments } from './comments.js'
 import { renderLogin } from './renderLogin.js'
 import { name, token } from './api.js'
 import { addComment } from './listener.js'
-// import { userToken } from './renderLogin.js'
+import { userToken, userName } from './renderLogin.js'
 
 
-export let userToken = localStorage.getItem('token')
-    console.log(userToken)
-    console.log(localStorage.getItem('token'))
+
 export const renderComment = () => {
     const container = document.getElementById('container')
     const commentsHtml = comments
@@ -41,7 +39,7 @@ export const renderComment = () => {
 `
         })
         .join('')
-    let userName = localStorage.getItem('name')
+    
     
     const addCommentsHtml = `
             <p class="comments-discription">Комментарий добавляется...</p>
@@ -53,7 +51,7 @@ export const renderComment = () => {
                     class="add-form-name"
                     placeholder="Введите ваше имя"
                     readonly
-                    value="${userName}"
+                    value="${userName.name}"
                     id="name-input"
                 />
                 <textarea
@@ -77,12 +75,12 @@ export const renderComment = () => {
     const baseHtml = `<ul id="comments" class="comments">${commentsHtml}</ul>
     
     
-${userToken ? addCommentsHtml : linkToLoginText}`
+${userToken.token ? addCommentsHtml : linkToLoginText}`
 
     container.innerHTML = baseHtml
     const logOut = document.getElementById('logOut')
     
-    if (userToken) {
+    if (userToken.token) {
         initAddClickListeners()
         answerClickListeners()
 
@@ -91,7 +89,9 @@ ${userToken ? addCommentsHtml : linkToLoginText}`
 
         logOut.addEventListener('click', () => {
             localStorage.clear()
+            userToken.token = ''
             renderComment()
+            console.log(userToken.token)
         })
     } else {
         const linkToLogin = document.getElementById('link-login')
