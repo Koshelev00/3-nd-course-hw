@@ -2,6 +2,7 @@ import { createCommentObject } from './createCommentObject.js'
 import { escapeHtml } from './escapeHtml.js'
 import { fetchAndRenderComment } from './fetchAndRenderComment.js'
 
+
 const host = ' https://wedev-api.sky.pro/api/v2/:alexey-koshelev'
 const authHost = 'https://wedev-api.sky.pro/api/user'
 export let token = ''
@@ -34,6 +35,7 @@ export const fetchComments = () => {
             return appComments
         })
 }
+
 let error500Flag = false
 
 export const postComment = (text, name) => {
@@ -41,13 +43,15 @@ export const postComment = (text, name) => {
         name = escapeHtml(document.getElementById('name-input').value)
     const newComment = createCommentObject(name, text)
 
-
+ 
     return fetch( 'https://wedev-api.sky.pro/api/v2/alexey-koshelev/comments', {
         
             method: 'POST',
             headers: {
-                Authorization: `Bearer ${userToken}`,
+                Authorization: `Bearer ${localStorage.getItem('token')}`,
+                
             },
+            
             body: JSON.stringify({
                 name:newComment.name,
                 text:newComment.text,

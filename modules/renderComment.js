@@ -2,15 +2,16 @@ import { initAddClickListeners, answerClickListeners } from './listener.js'
 import moment from '../node_modules/moment/dist/moment.js'
 import { comments } from './comments.js'
 import { renderLogin } from './renderLogin.js'
-import { name, token } from './api.js'
 import { addComment } from './listener.js'
-import { userToken, userName } from './renderLogin.js'
+
+
 
 
 
 export const renderComment = () => {
     const container = document.getElementById('container')
     const commentsHtml = comments
+   
 
         .map((comment, index) => {
             let classButton = comment.isLiked ? 'active-like' : 'like-button'
@@ -40,7 +41,7 @@ export const renderComment = () => {
         })
         .join('')
     
-    
+      
     const addCommentsHtml = `
             <p class="comments-discription">Комментарий добавляется...</p>
             
@@ -51,7 +52,7 @@ export const renderComment = () => {
                     class="add-form-name"
                     placeholder="Введите ваше имя"
                     readonly
-                    value="${userName.name}"
+                    value="${localStorage.getItem('name')}"
                     id="name-input"
                 />
                 <textarea
@@ -69,18 +70,19 @@ export const renderComment = () => {
                     </button>
                 </div>
             </div>`
+            
     const linkToLoginText = `<p> Чтобы оправить комментарий, <span class="link-login" id= "link-login">войдите</span></p>`
 
     
     const baseHtml = `<ul id="comments" class="comments">${commentsHtml}</ul>
     
     
-${userToken.token ? addCommentsHtml : linkToLoginText}`
+${localStorage.getItem('token') ? addCommentsHtml : linkToLoginText}`
 
     container.innerHTML = baseHtml
     const logOut = document.getElementById('logOut')
     
-    if (userToken.token) {
+    if (localStorage.getItem('token')) {
         initAddClickListeners()
         answerClickListeners()
 
@@ -89,9 +91,9 @@ ${userToken.token ? addCommentsHtml : linkToLoginText}`
 
         logOut.addEventListener('click', () => {
             localStorage.clear()
-            userToken.token = ''
+           
             renderComment()
-            console.log(userToken.token)
+           
         })
     } else {
         const linkToLogin = document.getElementById('link-login')

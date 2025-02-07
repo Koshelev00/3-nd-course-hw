@@ -221,3 +221,7 @@ body {
     animation: rotating 2s linear infinite;
  }
  
+ .preloader__description {
+  display: none;
+
+ }

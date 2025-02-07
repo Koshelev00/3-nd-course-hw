@@ -8,6 +8,6 @@ export let fetchAndRenderComment = () => {
         })
         .then((data) => {
             updateComments(data.comments)
-            renderComment(comments)
+            renderComment()
         })
 }

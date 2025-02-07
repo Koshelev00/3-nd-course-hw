@@ -1,7 +1,7 @@
 import { login, setToken, setName } from './api.js'
-import { fetchAndRenderComment } from './fetchAndRenderComment.js'
 import { renderComment } from './renderComment.js'
 import { renderRegistration } from './renderRegistration.js'
+
 
 export const renderLogin = () => {
     const container = document.getElementById('container')
@@ -32,6 +32,7 @@ export const renderLogin = () => {
           </fieldset>
           </section>
    `
+   
     container.innerHTML = loginHtml
     document.querySelector('.registry').addEventListener('click', () => {
         renderRegistration()
@@ -55,6 +56,9 @@ export const renderLogin = () => {
                 localStorage.setItem('name', data.user.name)
                 setToken(data.user.token)
                 setName(data.user.name)
+               renderComment()
+                
+
 
                
             })
@@ -63,11 +67,9 @@ export const renderLogin = () => {
             })
             .finally(() => {
                 submitButtonEl.disabled = false
-                renderComment()
+                
             })
     })
 }
-export let userToken = { token: localStorage.getItem('token') }
-export let userName = { name: localStorage.getItem('name') }
-console.log(userToken.token)
-console.log(localStorage.getItem('token'))
+
+

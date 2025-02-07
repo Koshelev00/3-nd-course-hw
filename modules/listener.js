@@ -19,7 +19,7 @@ export const initAddClickListeners = () => {
                     : comment.likes + 1
                 comment.isLiked = !comment.isLiked
                 comment.isLikeLoading = false
-                renderComment(comments)
+                renderComment()
             })
         })
     }
@@ -31,11 +31,13 @@ export const answerClickListeners = () => {
         answerComment.addEventListener('click', (event) => {
             const index = event.currentTarget.dataset.index
             const comment = comments[index]
+
             document.getElementById('comment-textarea').value =
                 `> ${comment.author.name} ${comment.text} < \n`
             document.getElementById('comment-textarea').focus()
-
-            renderComment(comments)
+            console.log(document.getElementById('comment-textarea').value)
+            console.log(comment.author.name)
+            console.log(comment.text)
         })
     }
 }
